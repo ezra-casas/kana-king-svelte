@@ -1,5 +1,6 @@
 <script>    
     import {selectedKanaGroup} from "../stores"
+    import DisplayKanaSelection from "../lib/helpers/DisplayKanaSelection.svelte";
 
 </script>
 
@@ -7,6 +8,5 @@
     <h1>Hero Title</h1>
 
 </section>
-<section>
-    
-</section>
+
+<DisplayKanaSelection/>
