@@ -1,7 +1,7 @@
 <script lang='ts'>
     import { kana } from "../../data/dictionary";
-    import { selectedKanaGroup, count } from "../../stores";
-
+    import { selectedKanaGroup } from "../../stores";
+    // import {clearAll} from "./helpersFunctions";
     const [hiraganaArray, katakanaArray] = kana
     const availableHiragana = Object.keys(hiraganaArray)
     const availableKatakana = Object.keys(katakanaArray)
@@ -11,18 +11,20 @@
     function boxIsChecked(e:Event){
         let isChecked = e.target.checked
         let group = e.target.value
-        console.log(`group: ${group}`)
 
         if(isChecked){
             isSelected.push(group)
             selectedKanaGroup.update(array => [...array, group])
         }else{
-            let index = isSelected.indexOf(group)
+            let index = $selectedKanaGroup.indexOf(group)
+            console.log(index)
             if(index !== -1){
                 isSelected.splice(index, 1)
+                selectedKanaGroup.update(group => [...group.filter(x => x !== group[index])])
+                
             }
+
         }
-        // console.log(isSelected)
         console.log($selectedKanaGroup)
     }
 
@@ -47,20 +49,8 @@
         selectedKanaGroup.set([])
     }
 
-    function onSubmit(){
-        let checkboxes = document.querySelectorAll("input")
-
-        checkboxes.forEach(box => {
-            if(box.checked){
-                isSelected.push(box.value)
-            }
-        })
-
-        selectedKanaGroup.set(isSelected)
+    function quizMe(){
         
-    }
-    function add(){
-        count.update(num => num + 1)
     }
 </script>
 
@@ -68,8 +58,7 @@
     DisplayKanaSelection
     <button on:click={selectAll}>Select All</button>
     <button on:click={clearAll}>Clear All</button>
-    <button on:submit={onSubmit}>Submit</button>
-    <button on:click={add}>Add</button>
+    <button on:submit={quizMe}>Submit</button>
 
     <input on:click={boxIsChecked} type="checkbox" value="Ezra"/>Ezra 
     <input on:click={boxIsChecked} type="checkbox" value="Marianne"/>Marianne
@@ -78,4 +67,3 @@
 </section>
 
 <h1>Selected kana: {$selectedKanaGroup}</h1>
-<p>count: {$count}</p>
