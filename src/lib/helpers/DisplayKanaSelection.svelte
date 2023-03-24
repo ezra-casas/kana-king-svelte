@@ -10,10 +10,10 @@
     const availableKatakana = Object.keys(katakanaArray)
 
 
-    function boxIsChecked(e:Event){
-        const isChecked = e.target?.checked
-        const group = e.target?.value
-
+    function boxIsChecked(event:MouseEvent){
+        const inputElement = event.target as HTMLInputElement;
+        const isChecked = inputElement.checked;
+        const group = inputElement.value;        
 
         if(isChecked){
             selectedKanaGroup.update(array => [...array, group])
