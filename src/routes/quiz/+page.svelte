@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { selectedKanaGroup } from "../../stores";
     import { kana } from "../../data/dictionary";
     
@@ -6,43 +6,43 @@
     const availableHiragana = Object.keys(hiraganaArray)
     const availableKatakana = Object.keys(katakanaArray)
     
-    let kanaGroup = [];
 
-    function randomizeKana(){
-        
-        // If more than one group is selected:
-        if($selectedKanaGroup.length > 1){
-            let count = $selectedKanaGroup.length
+function randomizeKana(): string[] {
+    let kanaGroup: string[] = [];
 
-            // Loop through length of group selection
-            for(let i = 0; i < count; i++){
+    while (kanaGroup.length < 10) {
+        for (let i: number = 0; i < $selectedKanaGroup.length; i++) {
+        let group: string = $selectedKanaGroup[i];
+        let groupFirstLetter: string = group[0];
+        let isLessThanKanaGroup: boolean = kanaGroup.length < 10 ? true : false;
 
-                //MAYBE: maybe add them as a group (object) 
-                const randKanaIndex = Math.floor(Math.random() * 4)
-                // MAYBE: create a counter of how many questions to get
-                // Would this counter / loop be within the length of the group
-                // selection or the outer loop?
+        if (groupFirstLetter === "h" && isLessThanKanaGroup) {
+            const currentArray: string[] = Object.keys(hiraganaArray[$selectedKanaGroup[i]]);
+            let randInt: number = Math.floor(Math.random() * currentArray.length);
+            const addToArray: string = currentArray[randInt];
 
-                for(; kanaGroup.length < 10; ){
-                                    
-                    if($selectedKanaGroup[i][0] === "h"){
-                        console.log("Hiragana")
-                        const addToArray = Object.keys(hiraganaArray[$selectedKanaGroup[i]])[randKanaIndex]
-                        kanaGroup.push(addToArray)
-                    }else{
-                        console.log("Katakana")
-                        const addToArray = Object.keys(katakanaArray[$selectedKanaGroup[i]])[randKanaIndex]
-
-                        kanaGroup.push(addToArray)
-                    }
-                }  
+            if (kanaGroup.includes(addToArray)) {
+            randInt = Math.floor(Math.random() * 5);
             }
+            kanaGroup.push(addToArray);
+        }
+
+        if (groupFirstLetter === "k" && isLessThanKanaGroup) {
+            const currentArray: string[] = Object.keys(katakanaArray[$selectedKanaGroup[i]]);
+            let randInt: number = Math.floor(Math.random() * currentArray.length);
+            const addToArray: string = currentArray[randInt];
+
+            if (addToArray.includes(addToArray)) {
+            randInt = Math.floor(Math.random() * 5);
+            }
+            kanaGroup.push(addToArray);
+        }
         }
     }
-
-
-    randomizeKana()
-    console.log(kanaGroup)
+    return kanaGroup;
+}
+    const questions = randomizeKana()
+    console.log(questions)
 </script>
 <h1>Quiz page</h1>
 <p>{$selectedKanaGroup}</p>

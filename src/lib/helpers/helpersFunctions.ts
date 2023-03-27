@@ -19,4 +19,4 @@ export function selectAll(e:Event){
         box.checked = true
         selectedKanaGroup.update(array => [...array, box.value])
     })
-}
+} 
