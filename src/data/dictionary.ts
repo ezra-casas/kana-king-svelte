@@ -1,4 +1,11 @@
-const hiragana = {
+interface KanaGroup{
+  [key:string]: string[];
+}
+interface KanaMap{
+  [key:string]: KanaGroup
+}
+
+const hiragana:KanaMap = {
   h_group1: { あ: ['a'], い: ['i'], う: ['u'], え: ['e'], お: ['o'] },
   h_group2: { か: ['ka'], き: ['ki'], く: ['ku'], け: ['ke'], こ: ['ko'] },
   h_group3: {
@@ -69,7 +76,7 @@ const hiragana = {
   h_group26_a: { ぴゃ: ['pya'], ぴゅ: ['pyu'], ぴょ: ['pyo'] },
 }
 
-const katakana = {
+const katakana:KanaMap = {
     k_group1: { 'ア': ['a'], 'イ': ['i'], 'ウ': ['u'], 'エ': ['e'], 'オ': ['o'] },
     k_group2: { 'カ': ['ka'], 'キ': ['ki'], 'ク': ['ku'], 'ケ': ['ke'], 'コ': ['ko'] },
     k_group3: { 'サ': ['sa'], 'シ': ['shi','si'], 'ス': ['su'], 'セ': ['se'], 'ソ': ['so'] },
@@ -104,4 +111,5 @@ const katakana = {
     k_group32_a: { 'チェ': ['che'], 'シェ': ['she'], 'ジェ': ['je'] },
     k_group33_a: { 'ティ': ['ti'], 'ディ': ['di'], 'デュ': ['du'], 'トゥ': ['tu'] }
 }
-export const kana = [hiragana, katakana];
+
+export const kana: KanaMap[] = [hiragana, katakana];
