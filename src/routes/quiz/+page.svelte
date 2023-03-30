@@ -1,31 +1,25 @@
 <script lang="ts">
-    import { selectedKanaGroup } from "../../stores";
+    import { selectedKanaGroup, romajiAnswers } from "../../stores";
     import { kana } from "../../data/dictionary";
-    
     
     const [hiraganaArray, katakanaArray] = kana;
     const availableHiragana = Object.keys(hiraganaArray);
     const availableKatakana = Object.keys(katakanaArray);
     
-    
+    let values:string[] = [];
+    let input: string = "";
+    let currentIndex: number = 0;
 
     function print(str){
         console.group(str)
     }
     const questions = randomizeKana()
-    let input: string = "";
-    let currentIndex: number = 0;
-    let currentQuestion = questions[currentIndex]
-    let values: string[] = [];
     
     function handleClick(){
         if(currentIndex < questions.length){
             currentIndex++;
-            currentQuestion = questions[currentIndex]
+            
             input = ''
-        }
-        if(input === 'o'){
-            print('pass')
         }
     }
 
@@ -33,16 +27,18 @@
         handleClick()
     }
 
-    function addKana(currentKeys: string[], currentValues: string[], kanaGroup:string[]){
-        let randInt: number = Math.floor(Math.random() * currentKeys.length)
-        const currentKey: string = currentKeys[randInt]
-        const currentValue: string[] = currentValues[randInt]
-        print(currentValue)
+    function addKana(currentKeys: string[], currentValues: string[], kanaGroup:string[]): void{
+        let currentElementIndex: number = Math.floor(Math.random() * currentKeys.length)
+        const currentKey: string = currentKeys[currentElementIndex]
+        const currentValue: string[] = currentValues[currentElementIndex]
+        values.push(currentValue)
+
         if(kanaGroup.includes(currentKey)){
-            randInt = Math.floor(Math.random() * currentKeys.length)
+            currentElementIndex = Math.floor(Math.random() * currentKeys.length)
         }
         kanaGroup.push(currentKey)
     }
+
     function randomizeKana(): string[] {
         let kanaGroup: string[] = [];
 
@@ -62,14 +58,18 @@
 
                 if (groupFirstLetter === "k" && isLessThanKanaGroup) {
                     const currentKeys: string[] = Object.keys(katakanaArray[$selectedKanaGroup[i]]);
-                    
-                    addKana(currentKeys, kanaGroup)
+                    const currentValues: string[] = Object.values(katakanaArray[$selectedKanaGroup[i]]);
+                    addKana(currentKeys, currentValues, kanaGroup)
                 }
             }
         }
         return kanaGroup;
     }
-    
+    function verify(kanaValues, kanaKey, index){
+        if(kanaValues[index] === input){
+            print("pass")
+        }
+    }
 </script>
 
 
@@ -84,7 +84,9 @@
                 <input autofocus bind:value={input} type="text" name="response" id="response" placeholder="romaji...">
                 <button type="button" on:click|preventDefault={handleClick}>Next</button>    
             </form>
+            
         {/if}
+        {values[index]}
     {/each}
     {#if currentIndex === questions.length}
         <h1>
