@@ -1,13 +1,14 @@
 <script lang="ts">
     import { selectedKanaGroup, romajiAnswers } from "../../stores";
     import { kana } from "../../data/dictionary";
+	import { goto } from "$app/navigation";
     
     const [hiraganaArray, katakanaArray] = kana;
     const availableHiragana = Object.keys(hiraganaArray);
     const availableKatakana = Object.keys(katakanaArray);
     
     let values:string[] = [];
-    let input: string = "";
+    let guess: string = "";
     let currentIndex: number = 0;
 
     function print(str){
@@ -16,17 +17,17 @@
     const questions = randomizeKana()
     
     function handleClick(){
-        if(currentIndex < questions.length){
-            currentIndex++;
-            
-            input = ''
+        if(values[currentIndex].includes(guess)){
+            console.log("pass")
+            currentIndex++
+            guess = ""
+        }else{
+            console.log("Fail")
+            currentIndex++
+            guess = ""
         }
+        
     }
-
-    function handleSubmit(){
-        handleClick()
-    }
-
     function addKana(currentKeys: string[], currentValues: string[], kanaGroup:string[]): void{
         let currentElementIndex: number = Math.floor(Math.random() * currentKeys.length)
         const currentKey: string = currentKeys[currentElementIndex]
@@ -65,11 +66,12 @@
         }
         return kanaGroup;
     }
-    function verify(kanaValues, kanaKey, index){
-        if(kanaValues[index] === input){
-            print("pass")
-        }
+
+    function handleBack(){
+        $selectedKanaGroup.length = 0
+        goto("/")
     }
+
 </script>
 
 
@@ -80,19 +82,19 @@
         {#if index === currentIndex}
             <h1>{question}</h1>
 
-            <form on:submit|preventDefault={handleSubmit}>
-                <input autofocus bind:value={input} type="text" name="response" id="response" placeholder="romaji...">
+            <form on:submit|preventDefault={handleClick}>
+                <input autofocus bind:value={guess} type="text" name="response" id="response" placeholder="romaji...">
                 <button type="button" on:click|preventDefault={handleClick}>Next</button>    
             </form>
-            
+        
         {/if}
-        {values[index]}
     {/each}
+
     {#if currentIndex === questions.length}
         <h1>
             FINISH!
         </h1>
-        <button>Back</button>
+        <button on:click={handleBack}>Back</button>
     {/if}
 </section>
 
