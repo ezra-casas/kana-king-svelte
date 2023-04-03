@@ -5,7 +5,12 @@ export const kanaQuiz = writable([])
 
 export const romajiAnswers = writable<string[]>([]);
 
+export const scores = writable({
+    correctly: 0,
+    incorrectly: 0
+})
+
 export const answered = writable({
-    "correctly": 0,
-    "incorrectly": 0
-}) 
+    good: [],
+    bad: []
+})

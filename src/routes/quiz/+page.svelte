@@ -1,7 +1,8 @@
 <script lang="ts">
     import { 
         selectedKanaGroup, 
-        romajiAnswers 
+        romajiAnswers, 
+		scores
     } from "../../stores";
     import { kana } from "../../data/dictionary";
     import {
@@ -16,20 +17,29 @@
     let selectedValues:string[][] = [];
     let guess: string = "";
     let currentIndex = 0;
+    let correctlyAnswered = 0;
+    let incorrectlyAnswered = 0;
 
     const questions = randomizeKana($selectedKanaGroup, selectedValues, hiraganaArray, katakanaArray)
     
     function handleClick(){
         if(selectedValues[currentIndex].includes(guess)){
-            console.log("pass")
+            correctlyAnswered++
+            scores.update(state => {
+                state.correctly++;
+                return state;
+            });
             currentIndex++
             guess = ""
         }else{
-            console.log("Fail")
+            incorrectlyAnswered++
+            scores.update(state => {
+                state.incorrectly++;
+                return state;
+            });
             currentIndex++
             guess = ""
         }
-        
     }
 
 </script>
@@ -54,6 +64,9 @@
         <h1>
             FINISH!
         </h1>
+        <p>Answered Correctly: {correctlyAnswered}</p>
+        <p>Answered Incorrectly: {incorrectlyAnswered}</p>
+        <p>{$scores.correctly}</p>
         <button on:click={handleBack}>Back</button>
     {/if}
 </section>
