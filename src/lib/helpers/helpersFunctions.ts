@@ -16,8 +16,10 @@ export function selectAll(e:Event){
 
     const checkboxes = document.querySelectorAll("input")
     checkboxes.forEach(box => {
-        box.checked = true
-        selectedKanaGroup.update(array => [...array, box.value])
+        if(box.checked === false){
+            box.checked = true
+            selectedKanaGroup.update(array => [...array, box.value])
+        }
     })
 } 
 
@@ -67,4 +69,15 @@ export function randomizeKana(kanaGroupsToSelectFrom, selectedValues:string[][],
         }
     }
     return kanaGroup;
+}
+
+export function quizMe(kanaGroup: string[]): void {
+    if (kanaGroup.length > 0) {
+        goto('/quiz');
+    } else {
+        const isVisible = document.getElementById('no_groups');
+        if (isVisible) {
+        (isVisible as HTMLElement).style.visibility = 'visible';
+        }
+    }
 }
