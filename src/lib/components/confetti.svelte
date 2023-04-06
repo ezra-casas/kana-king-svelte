@@ -35,6 +35,7 @@
         startVelocity: 55,
     })
 </script>
+
 <div class="confetti-container">
 </div>
 

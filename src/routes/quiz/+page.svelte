@@ -64,7 +64,7 @@
                 guess = ""
                 setTimeout(() => {
                     result = ""
-                }, 1200)
+                }, 1400)
             }else{
                 incorrectlyAnswered++
                 scores.update(state => {
@@ -85,7 +85,7 @@
                 guess = ""
                 setTimeout(() => {
                     result = ""
-                }, 1200)
+                }, 1300)
             }
         }else{
             const message = document.querySelector<HTMLParagraphElement>(".hideMessage")!
@@ -114,19 +114,23 @@
                     </label>
                     <button type="button" on:click|preventDefault={handleClick}>Next</button>    
                 </form>
-                {#if result === "correct"}
-                    <p class="result correct">{correctResponseArray[Math.floor(Math.random() * (correctResponseArray.length - 1))]}</p>
-                    {result = ""}
-                    {:else if result === "wrong"}
-                    <p class="result wrong">{wrongResponseArray[Math.floor(Math.random() * (wrongResponseArray.length - 1))]}</p>
-                    {result = ""}
-                {/if}
+                <div style="height: 50px">
+                    {#if result === "correct"}
+                        <p class="result correct">{correctResponseArray[Math.floor(Math.random() * (correctResponseArray.length - 1))]}</p>
+                        {result = ""}
+                        {:else if result === "wrong"}
+                        <p class="result wrong">{wrongResponseArray[Math.floor(Math.random() * (wrongResponseArray.length - 1))]}</p>
+                        {result = ""}
+                    {/if}
+                </div>
                 <p class="hideMessage" style="visibility: hidden;">
                     Please type an answer
                 </p>
+ 
             {/if}
         {/each}
 
+        
         {#if currentIndex === questions.length}
             <Confetti/>
             <h1>
@@ -138,6 +142,7 @@
         {/if}
         
     </section>
+
 
 </div>
 
