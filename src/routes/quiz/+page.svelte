@@ -12,6 +12,7 @@
         addRandomKana, 
         randomizeKana,
     } from "../../lib/helpers/helpersFunctions"
+    import Confetti from "../../lib/components/confetti.svelte";
     
     const [hiraganaArray, katakanaArray] = kana;
     
@@ -42,81 +43,171 @@
     const questions = randomizeKana($selectedKanaGroup, selectedValues, hiraganaArray, katakanaArray)
     
     function handleClick(){
-        if(selectedValues[currentIndex].includes(guess)){
-            correctlyAnswered++
-            scores.update(state => {
-                state.correctly++;
-                return state;
-            });
-            result = 'correct'
-            // answered.update(state => {
-            //     const spread = [...state.good, selectedValues[currentIndex]]
-            //     state = {
-            //         ...state,
-            //         good: spread,
-            //     }
-            //     return state
-            // })
+        if(guess.length > 0){
+            if(selectedValues[currentIndex].includes(guess)){
+                correctlyAnswered++
+                scores.update(state => {
+                    state.correctly++;
+                    return state;
+                });
+                result = 'correct'
+                // answered.update(state => {
+                //     const spread = [...state.good, selectedValues[currentIndex]]
+                //     state = {
+                //         ...state,
+                //         good: spread,
+                //     }
+                //     return state
+                // })
 
-            currentIndex++
-            guess = ""
+                currentIndex++
+                guess = ""
+                setTimeout(() => {
+                    result = ""
+                }, 1400)
+            }else{
+                incorrectlyAnswered++
+                scores.update(state => {
+                    state.incorrectly++;
+                    return state;
+                });
+                
+                result = 'wrong'
+                // answered.update(state => {
+                //     const spreadState = [...state.bad, selectedValues[currentIndex]]
+                //     state = {
+                //         ...state,
+                //         bad: spreadState,
+                //     }
+                //     return state
+                // })
+                currentIndex++
+                guess = ""
+                setTimeout(() => {
+                    result = ""
+                }, 1300)
+            }
         }else{
-            incorrectlyAnswered++
-            scores.update(state => {
-                state.incorrectly++;
-                return state;
-            });
-            
-            result = 'wrong'
-            // answered.update(state => {
-            //     const spreadState = [...state.bad, selectedValues[currentIndex]]
-            //     state = {
-            //         ...state,
-            //         bad: spreadState,
-            //     }
-            //     return state
-            // })
-            currentIndex++
-            guess = ""
+            const message = document.querySelector<HTMLParagraphElement>(".hideMessage")!
+            message.style.visibility = "visible";
         }
+        
     }
 </script>
 
+<div class="container">
+    <h1 class="title">{selectedValues.length - currentIndex}
+        {#if selectedValues.length - currentIndex === 1}question
+        {:else}questions
+        {/if} left
+    </h1>
 
-<h1>Quiz page</h1>
+    <section class="quiz-container">
 
-<section class="quiz-container">
-
-    {#each questions as question, index}
-        {#if index === currentIndex}
-            <h1>{question}</h1>
-            <form on:submit|preventDefault={handleClick}>
-                <input autofocus bind:value={guess} type="text" name="response" id="response" placeholder="romaji...">
-                <button type="button" on:click|preventDefault={handleClick}>Next</button>    
-            </form>
-            {#if result === "correct"}
-                <p style="color: green;">{correctResponseArray[Math.floor(Math.random() * (correctResponseArray.length - 1))]}</p>
-                {:else if result === "wrong"}
-                <p style="color: red;">{wrongResponseArray[Math.floor(Math.random() * (wrongResponseArray.length - 1))]}</p>
+        {#each questions as question, index}
+            {#if index === currentIndex}
+                <h1 class="question">{question}</h1>
+                <form on:submit|preventDefault={handleClick}>
+                    <label for="input">
+                        Type in the romaji
+                        <input autofocus bind:value={guess} type="text" name="response" id="response" placeholder="romaji...">
+                    </label>
+                    <button type="button" on:click|preventDefault={handleClick}>Next</button>    
+                </form>
+                <div style="height: 50px">
+                    {#if result === "correct"}
+                        <p class="result correct">{correctResponseArray[Math.floor(Math.random() * (correctResponseArray.length - 1))]}</p>
+                        {result = ""}
+                        {:else if result === "wrong"}
+                        <p class="result wrong">{wrongResponseArray[Math.floor(Math.random() * (wrongResponseArray.length - 1))]}</p>
+                        {result = ""}
+                    {/if}
+                </div>
+                <p class="hideMessage" style="visibility: hidden;">
+                    Please type an answer
+                </p>
+ 
             {/if}
-            
-            
+        {/each}
+
+        
+        {#if currentIndex === questions.length}
+            <Confetti/>
+            <h1>
+                FINISH!
+            </h1>
+            <p class="correct">Answered Correctly: {correctlyAnswered}</p>
+            <p class="wrong">Answered Incorrectly: {incorrectlyAnswered}</p>
+            <button on:click={handleBack}>Back</button>
         {/if}
-    {/each}
-
-    {#if currentIndex === questions.length}
-        <h1>
-            FINISH!
-        </h1>
-        <p style="color: green">Answered Correctly: {correctlyAnswered}</p>
-        <p style="color: red">Answered Incorrectly: {incorrectlyAnswered}</p>
-        <button on:click={handleBack}>Back</button>
-    {/if}
-
-</section>
+        
+    </section>
 
 
+</div>
 
 
 <style>
+    .container{
+        background-color: rgb(32, 129, 132);
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .quiz-container{
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .result{
+        transition: opacity 0.5s ease-in-out;
+        font-weight: bolder;
+    }
+    .question{
+        font-size: 4rem;
+    }
+
+    .correct{
+        color:rgb(0, 255, 60);
+    }
+    .wrong{
+        color:rgb(217, 214, 61);
+    }
+
+    form{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+    }
+    label{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    input{
+        border: none;
+        border-radius: 10px;
+        height: 32px;
+        padding: 10px;
+    }
+
+    button{
+        background-color: #ffffff;
+        border-radius: 10px;
+        width: 100px;
+        height: 50px;
+        border: none;
+        font-weight: bolder;
+        user-select: none;
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.363);
+        align-self: flex-end;
+    }
+
 </style>
