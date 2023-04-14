@@ -44,7 +44,7 @@
     
     function handleClick(){
         if(guess.length > 0){
-            if(selectedValues[currentIndex].includes(guess)){
+            if(selectedValues[currentIndex].includes(guess.toLowerCase())){
                 correctlyAnswered++
                 scores.update(state => {
                     state.correctly++;
@@ -110,7 +110,7 @@
                 <form on:submit|preventDefault={handleClick}>
                     <label for="input">
                         Type in the romaji
-                        <input autofocus bind:value={guess} type="text" name="response" id="response" placeholder="romaji...">
+                        <input autofocus autocapitalize="words" bind:value={guess} type="text" name="response" id="response" placeholder="romaji...">
                     </label>
                     <button type="button" on:click|preventDefault={handleClick}>Next</button>    
                 </form>
@@ -149,7 +149,7 @@
 
 <style>
     .container{
-        background-color: rgb(32, 129, 132);
+        background-color: rgb(36, 50, 68);
         height: 100vh;
         margin: 0;
         padding: 0;
@@ -172,14 +172,12 @@
     .question{
         font-size: 4rem;
     }
-
     .correct{
-        color:rgb(0, 255, 60);
+        color:#60f88b;
     }
     .wrong{
-        color:rgb(217, 214, 61);
+        color:#ff6f6f;
     }
-
     form{
         display: flex;
         flex-direction: column;
@@ -197,7 +195,6 @@
         height: 32px;
         padding: 10px;
     }
-
     button{
         background-color: #ffffff;
         border-radius: 10px;
@@ -208,6 +205,18 @@
         user-select: none;
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.363);
         align-self: flex-end;
+        
+    }
+    button:active{
+        transform: scale(1.2);
+        background-color: rgb(172, 172, 172);
+    }
+
+    @media only screen and (max-width: 767px){
+        form{
+            gap: 2rem;
+            padding: 10px;
+        }
     }
 
 </style>

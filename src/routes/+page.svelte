@@ -28,7 +28,7 @@
         padding: 0;
         margin: 0;
         justify-content: space-between;
-        background-color: rgb(32, 129, 132);
+        background-color: rgb(36, 50, 68);
     }
     section{
         display: flex;
@@ -41,5 +41,13 @@
     footer{
         padding: 0;
         margin: 0;
+    }
+    @media only screen and (max-width: 767px){
+        .container{
+            padding: 0 15px;
+        }
+        h1{
+            font-size: 3rem;
+        }
     }
 </style>
