@@ -5,7 +5,10 @@
 </script>
 
 <div class="container">
-    <h1>Kana King</h1>
+    <div>
+        <h1>Kana King</h1>
+        <hr>
+    </div>
     <section>
         <div class="selection">
             <DisplayKanaSelection/>
@@ -37,6 +40,9 @@
     }
     h1{
         font-size: 4rem;
+    }
+    hr{
+        color: #fff;
     }
     footer{
         padding: 0;

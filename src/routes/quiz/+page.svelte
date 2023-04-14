@@ -88,7 +88,7 @@
                 }, 1300)
             }
         }else{
-            const message = document.querySelector<HTMLParagraphElement>(".hideMessage")!
+            const message = document.querySelector<HTMLParagraphElement>(".hide-message")!
             message.style.visibility = "visible";
         }
         
@@ -96,11 +96,15 @@
 </script>
 
 <div class="container">
-    <h1 class="title">{selectedValues.length - currentIndex}
-        {#if selectedValues.length - currentIndex === 1}question
-        {:else}questions
-        {/if} left
-    </h1>
+    {#if selectedValues.length - currentIndex != 0}
+        <h1 class="title"><p>{selectedValues.length - currentIndex}</p>
+            
+                {#if selectedValues.length - currentIndex === 1}question
+                {:else}questions
+                {/if} left
+            
+        </h1>
+    {/if}
 
     <section class="quiz-container">
 
@@ -123,7 +127,7 @@
                         {result = ""}
                     {/if}
                 </div>
-                <p class="hideMessage" style="visibility: hidden;">
+                <p class="hide-message" style="visibility: hidden;">
                     Please type an answer
                 </p>
  
@@ -132,13 +136,19 @@
 
         
         {#if currentIndex === questions.length}
-            <Confetti/>
-            <h1>
-                FINISH!
-            </h1>
-            <p class="correct">Answered Correctly: {correctlyAnswered}</p>
-            <p class="wrong">Answered Incorrectly: {incorrectlyAnswered}</p>
-            <button on:click={handleBack}>Back</button>
+            <div class="finish">
+                <Confetti/>
+
+                <h1>
+                    FINISH!
+                </h1>
+                <div>
+                    <p class="correct">Answered Correctly: {correctlyAnswered}</p>
+                    <p class="wrong">Answered Incorrectly: {incorrectlyAnswered}</p>
+                </div>
+                
+                <button on:click={handleBack}>Back</button>
+            </div>
         {/if}
         
     </section>
@@ -171,6 +181,7 @@
     }
     .question{
         font-size: 4rem;
+        animation: pulse 1s ease-in-out;
     }
     .correct{
         color:#60f88b;
@@ -210,12 +221,48 @@
     button:active{
         transform: scale(1.2);
         background-color: rgb(172, 172, 172);
+    }   
+    .finish{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+        gap: 1.2rem;
+    }
+    .finish h1{
+        font-size: 3rem;
+    }
+    .hide-message{
+        color: #ff6f6f;
+    }
+    .title{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .title p{
+        color: #ead154;
     }
 
     @media only screen and (max-width: 767px){
         form{
             gap: 2rem;
             padding: 10px;
+        }
+    }
+
+    @keyframes pulse{
+        0%{
+            
+            transform: scale(1);
+        }
+        50% {
+            
+            transform: scale(1.3);
+        }
+        100% {
+            
+            transform: scale(1);
         }
     }
 

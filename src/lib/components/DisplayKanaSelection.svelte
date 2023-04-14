@@ -67,10 +67,10 @@
         </label>
         Special Kana
     </div>
-    
+    <h1 id="no_groups" class="notVisible">
+        Please select a group of kana
+    </h1>
 </section>
-
-<h1 id="no_groups" class="notVisible">Please select a group of kana</h1>
 
 <style>
     .switch-container{
@@ -107,7 +107,7 @@
     }
     .slider:before {
         content: "";
-        display: inline-block;
+        
         position: absolute;
         top: -3px;
         left: -2px;
@@ -134,14 +134,16 @@
         transform: translateX(26px);
         -webkit-transform: translateX(26px);
         -ms-transform: translateX(26px);
-        box-shadow: 0 0 20px rgba(0,0,0, 0.4);
-        background-color: #60f88b;
+        box-shadow: 0 0 20px rgba(220, 255, 193, 0.4);
+        background-color: #27ff64;
         transition: transform 0.2s ease;
     }
 
     
     .notVisible{
         visibility: hidden;
+        color: #ff6f6f;
+        
     }
     .kanaGroup{
         display: flex;
@@ -160,10 +162,12 @@
         width: 16px;
         height: 16px;
         background-color: #eee;
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.363);
         border-radius: 2px;
     }
     .kana input:checked + .checkmark{
         background-color: #21f364;
+        box-shadow: none;
     }
     .kana label{
         display: inline-block;
@@ -172,6 +176,7 @@
         -moz-user-select: none; /* Firefox */
         -ms-user-select: none; /* IE10+/Edge */
         user-select: none; /* Standard */
+        
     }
     .kana input:checked + .checkmark + span{
         color: #21f364;
