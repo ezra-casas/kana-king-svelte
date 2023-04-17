@@ -1,13 +1,18 @@
-<script>    
+<script lang="ts">    
     import DisplayKanaSelection from "../lib/components/DisplayKanaSelection.svelte"
     import {toggleClassOnElements} from "../lib/helpers/helpersFunctions";
     import {version} from "../lib/versioning/version"
 
-    function showHidden(){
+    function showHidden(): void{
+        
         toggleClassOnElements(".s-kana", "kana-selection", "input")
         toggleClassOnElements("#specialGroup", "visible")
-        const element = document.querySelector(".container");
-        element?.classList.toggle('height')
+        
+        const isMobile = window.matchMedia('(max-width: 767px)').matches;
+        if(isMobile) { toggleClassOnElements('.container', 'height') }
+        
+
+        
     }
 </script>
 
@@ -133,9 +138,14 @@
         padding: 0;
         margin: 0;
     }
-    @media (max-width: 768px){
+    @media (max-width: 767px){
         h1{
             font-size: 3rem;
+        }
+    }
+    @media only screen and (max-width: 320px){
+        .height{
+            height: auto;
         }
     }
 </style>
