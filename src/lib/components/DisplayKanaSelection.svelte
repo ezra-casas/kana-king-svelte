@@ -93,75 +93,6 @@
 </section>
 
 <style>
-    .switch-container{
-        display: flex;
-        gap: 0.5rem;
-
-        -webkit-user-select: none; /* Safari */        
-        -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* IE10+/Edge */
-        user-select: none; /* Standard */
-    }
-    .switch input{
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-    .slider::before{
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        bottom: 4px;
-        background-color: #ffa8a8;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        border-radius: 50%;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    }
-    .slider{
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ff6f6f;
-        -webkit-transition: .4s;
-        transition: .5s ease;
-        border-radius: 34px;
-    }
-    .slider:before {
-        content: "";
-        position: absolute;
-        top: -3px;
-        left: -2px;
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .switch{
-        display: inline-block;
-        position: relative;
-        width: 50px;
-        height: 20px;
-        transition: background-color 0.3s;
-    }
-    .switch input:checked + .slider{
-        background-color: #21f35d;
-    }
-    .switch input:focus + .slider{
-        box-shadow: 0 0 1px #21f35d;
-    }
-    .switch input:checked + .slider:before{
-        transform: translateX(26px);
-        -webkit-transform: translateX(26px);
-        -ms-transform: translateX(26px);
-        box-shadow: 0 0 20px rgba(220, 255, 193, 0.4);
-        background-color: #27ff64;
-        transition: transform 0.2s ease;
-    }
 
     .notVisible{
         visibility: hidden;
@@ -229,6 +160,7 @@
         gap: 2rem;
     }
     
+    
     section{
         display: flex;
         flex-direction: column;
@@ -267,10 +199,7 @@
         from{opacity: 1;}
         to{opacity: 0;}
     }
-    @media (max-width: 768px){
-        section{
-            
-        }
+    @media (max-width: 767px){
         .kanaGroup{
             display: flex;
             flex-wrap: wrap;
@@ -281,6 +210,13 @@
         input[type="checkbox"]{
             transform: scale(1.5);
             margin: 10px;
+        }
+    }
+
+    @media only screen and (-webkit-min-device-pixel-ratio: 2){
+        .btn-container{
+            justify-content: center;
+            width: 300px;
         }
     }
     
