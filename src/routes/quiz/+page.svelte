@@ -44,22 +44,13 @@
     
     function handleClick(){
         if(guess.length > 0){
-            if(selectedValues[currentIndex].includes(guess)){
+            if(selectedValues[currentIndex].includes(guess.toLowerCase())){
                 correctlyAnswered++
                 scores.update(state => {
                     state.correctly++;
                     return state;
                 });
                 result = 'correct'
-                // answered.update(state => {
-                //     const spread = [...state.good, selectedValues[currentIndex]]
-                //     state = {
-                //         ...state,
-                //         good: spread,
-                //     }
-                //     return state
-                // })
-
                 currentIndex++
                 guess = ""
                 setTimeout(() => {
@@ -71,16 +62,7 @@
                     state.incorrectly++;
                     return state;
                 });
-                
                 result = 'wrong'
-                // answered.update(state => {
-                //     const spreadState = [...state.bad, selectedValues[currentIndex]]
-                //     state = {
-                //         ...state,
-                //         bad: spreadState,
-                //     }
-                //     return state
-                // })
                 currentIndex++
                 guess = ""
                 setTimeout(() => {
@@ -88,19 +70,22 @@
                 }, 1300)
             }
         }else{
-            const message = document.querySelector<HTMLParagraphElement>(".hideMessage")!
+            const message = document.querySelector<HTMLParagraphElement>(".hide-message")!
             message.style.visibility = "visible";
         }
-        
     }
 </script>
 
 <div class="container">
-    <h1 class="title">{selectedValues.length - currentIndex}
-        {#if selectedValues.length - currentIndex === 1}question
-        {:else}questions
-        {/if} left
-    </h1>
+    {#if selectedValues.length - currentIndex != 0}
+        <h1 class="title"><p>{selectedValues.length - currentIndex}</p>
+            
+                {#if selectedValues.length - currentIndex === 1}question
+                {:else}questions
+                {/if} left
+            
+        </h1>
+    {/if}
 
     <section class="quiz-container">
 
@@ -110,7 +95,7 @@
                 <form on:submit|preventDefault={handleClick}>
                     <label for="input">
                         Type in the romaji
-                        <input autofocus bind:value={guess} type="text" name="response" id="response" placeholder="romaji...">
+                        <input autofocus autocapitalize="words" bind:value={guess} type="text" name="response" id="response" placeholder="romaji...">
                     </label>
                     <button type="button" on:click|preventDefault={handleClick}>Next</button>    
                 </form>
@@ -123,7 +108,7 @@
                         {result = ""}
                     {/if}
                 </div>
-                <p class="hideMessage" style="visibility: hidden;">
+                <p class="hide-message" style="visibility: hidden;">
                     Please type an answer
                 </p>
  
@@ -132,13 +117,19 @@
 
         
         {#if currentIndex === questions.length}
-            <Confetti/>
-            <h1>
-                FINISH!
-            </h1>
-            <p class="correct">Answered Correctly: {correctlyAnswered}</p>
-            <p class="wrong">Answered Incorrectly: {incorrectlyAnswered}</p>
-            <button on:click={handleBack}>Back</button>
+            <div class="finish">
+                <Confetti/>
+
+                <h1>
+                    FINISH!
+                </h1>
+                <div>
+                    <p class="correct">Answered Correctly: {correctlyAnswered}</p>
+                    <p class="wrong">Answered Incorrectly: {incorrectlyAnswered}</p>
+                </div>
+                
+                <button on:click={handleBack}>Back</button>
+            </div>
         {/if}
         
     </section>
@@ -149,7 +140,7 @@
 
 <style>
     .container{
-        background-color: rgb(32, 129, 132);
+        background-color: rgb(36, 50, 68);
         height: 100vh;
         margin: 0;
         padding: 0;
@@ -159,7 +150,6 @@
         flex-direction: column;
     }
     .quiz-container{
-        position: relative;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -171,15 +161,14 @@
     }
     .question{
         font-size: 4rem;
+        animation: pulse 1s ease-in-out;
     }
-
     .correct{
-        color:rgb(0, 255, 60);
+        color:#60f88b;
     }
     .wrong{
-        color:rgb(217, 214, 61);
+        color:#ff6f6f;
     }
-
     form{
         display: flex;
         flex-direction: column;
@@ -197,7 +186,6 @@
         height: 32px;
         padding: 10px;
     }
-
     button{
         background-color: #ffffff;
         border-radius: 10px;
@@ -208,6 +196,54 @@
         user-select: none;
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.363);
         align-self: flex-end;
+        
+    }
+    button:active{
+        transform: scale(1.2);
+        background-color: rgb(172, 172, 172);
+    }   
+    .finish{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+        gap: 1.2rem;
+    }
+    .finish h1{
+        font-size: 3rem;
+    }
+    .hide-message{
+        color: #ff6f6f;
+    }
+    .title{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .title p{
+        color: #ead154;
+    }
+
+    @media only screen and (max-width: 768px){
+        form{
+            gap: 2rem;
+            padding: 10px;
+        }
+    }
+
+    @keyframes pulse{
+        0%{
+            
+            transform: scale(1);
+        }
+        50% {
+            
+            transform: scale(1.3);
+        }
+        100% {
+            
+            transform: scale(1);
+        }
     }
 
 </style>

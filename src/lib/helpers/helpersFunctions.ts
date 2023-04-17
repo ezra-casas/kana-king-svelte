@@ -1,28 +1,50 @@
 import { goto } from "$app/navigation"
 import { selectedKanaGroup } from "../../stores"
+import type { Writable } from "svelte/store";
 
+export function handleCheckboxChange(event: MouseEvent, selectedKanaGroup: Writable<Array<string>>): void {
+    const inputElement = event.target as HTMLInputElement;
+    const isChecked = inputElement.checked;
+    const group = inputElement.value;
+  
+    if (isChecked) {
+      selectedKanaGroup.update((array: Array<string>) => [...array, group]);
+    } else {
+      selectedKanaGroup.update((groupArray: Array<string>) => groupArray.filter((x) => x !== group));
+    }
+  }
+  
 export function clearAll(e:Event){
     e.preventDefault()
-
-    const checkboxes = document.querySelectorAll("input")
-    checkboxes.forEach(box => {
-        box.checked = false
-    })
+    const checkboxes = document.querySelectorAll<HTMLInputElement>('.kana-selection:checked');
+    Array.from(checkboxes).map((checkbox) => {
+        checkbox.checked = false;
+        return checkbox.value;
+    });
     selectedKanaGroup.set([])
 }
+export function selectAll(e: Event) {
+    e.preventDefault();
+    const checkboxes = document.querySelectorAll<HTMLInputElement>('.kana-selection:not(:checked)');
+    const selectedValues = Array.from(checkboxes).map((checkbox) => {
+        checkbox.checked = true;
+        return checkbox.value;
+    });
+    selectedKanaGroup.update((array) => [...array, ...selectedValues]);
+}
 
-export function selectAll(e:Event){
-    e.preventDefault()
-
-    const checkboxes = document.querySelectorAll("input")
-    checkboxes.forEach(box => {
-        if(box.checked === false){
-            box.checked = true
-            selectedKanaGroup.update(array => [...array, box.value])
+export function toggleClassOnElements(selector: string, className: string, childSelector?: string){
+    const elements = document.querySelectorAll(selector)
+    elements.forEach(element => {
+        element.classList.toggle(className);
+        if(childSelector){
+            const children = element.querySelectorAll(childSelector)
+            children.forEach(child => {
+                child.classList.toggle(className)
+            })
         }
     })
-} 
-
+}
 export function handleBack(){
     selectedKanaGroup.set([])
     goto("/")
@@ -46,11 +68,11 @@ export function addRandomKana(kanaKeys: string[], kanaValues: string[][], select
 }
 
 
-export function randomizeKana(kanaGroupsToSelectFrom, selectedValues:string[][], hiraganaArray, katakanaArray ): string[] {
+export function randomizeKana(kanaGroupsToSelectFrom: string[], selectedValues:string[][], hiraganaArray: [key:string], katakanaArray: [key:string] ): string[] {
     let kanaGroup: string[] = [];
 
     while (kanaGroup.length < 10) {
-        for (let i: number = 0; i < kanaGroupsToSelectFrom.length; i++) {
+        for (let i = 0; i < kanaGroupsToSelectFrom.length; i++) {
             const group: string = kanaGroupsToSelectFrom[i];
             const groupFirstLetter: string = group[0];
             const isLessThanKanaGroup: boolean = kanaGroup.length < 10;
