@@ -1,31 +1,20 @@
 <script lang='ts'>
     import { kana } from "../../data/dictionary";
     import { selectedKanaGroup } from "../../stores";
-    import {clearAll, selectAll, quizMe} from "../helpers/helpersFunctions";
+    import {
+        clearAll, 
+        selectAll, 
+        quizMe, 
+        handleCheckboxChange
+    } from "../helpers/helpersFunctions";
 
     const [hiraganaArray, katakanaArray] = kana
     const availableHiragana = Object.keys(hiraganaArray)
     const availableKatakana = Object.keys(katakanaArray)
 
-    function boxIsChecked(event:MouseEvent){
-        const inputElement = event.target as HTMLInputElement;
-        const isChecked = inputElement.checked;
-        const group = inputElement.value;        
-
-        if(isChecked){
-            selectedKanaGroup.update(array => [...array, group])
-        }else{
-            const index = $selectedKanaGroup.indexOf(group)
-            if(index !== -1){
-                selectedKanaGroup.update(group => [...group.filter(x => x !== group[index])])
-            }
-        }
-    }
-
 </script>
 
 <section>
-
     <div class="kanaGroup">
 
         <!-- HIRAGANA -->
@@ -33,49 +22,85 @@
             {#each availableHiragana as group, index}
                 {#if index < 10}
                     <label>
-                        <input type="checkbox" value={group} on:click={boxIsChecked}>
+                        <input class="kana-selection" type="checkbox" value={group} on:click={(event)=> handleCheckboxChange(event, selectedKanaGroup)}>
                         <span class="checkmark"></span>
                         {Object.keys(hiraganaArray[availableHiragana[index]])[0]}
                     </label>
                 {/if}
             {/each}
         </div>
+        <!-- Special HIRAGANA -->
+        <div id="specialGroup" class="visible">
+            
+            <div class="s-hiragana s-kana">
+            
+                {#each availableHiragana as _, index}
+                    {#if index+10 < availableHiragana.length}
+                        <label>
+                            <input id="" type="checkbox" value={availableHiragana[index+10]} on:click={(event)=> handleCheckboxChange(event, selectedKanaGroup)}>
+                            <span class="checkmark"></span>
+                            {Object.keys(hiraganaArray[availableHiragana[index+10]])[0]}
+                        </label>
+                    {/if}
+                {/each}
+            </div>
+            <hr>
+        </div>
+
         <!-- KATAKANA -->
         <div class="katakana kana">
             {#each availableKatakana as group, index}
-            {#if index < 10}
-                <label>
-                    <input type="checkbox" value={group} on:click={boxIsChecked}>
-                    <span class="checkmark"></span>
-                    {Object.keys(katakanaArray[availableKatakana[index]])[0]}
-                </label>
-            {/if}
+                {#if index < 10}
+                    <label>
+                        <input class="kana-selection" type="checkbox" value={group} on:click={(event)=> handleCheckboxChange(event, selectedKanaGroup)}>
+                        <span class="checkmark"></span>
+                        {Object.keys(katakanaArray[availableKatakana[index]])[0]}
+                    </label>
+                {/if}
             {/each}
         </div>
-
+        <!-- SPECIAL KATAKANA -->
+        <div id="specialGroup" class="visible">
+            
+            <div class="s-katakana s-kana">
+            
+                {#each availableKatakana as group, index}
+                    {#if index+10 < availableKatakana.length}
+                        <label>
+                            <input type="checkbox" value={group} on:click={(event)=> handleCheckboxChange(event, selectedKanaGroup)}>
+                            <span class="checkmark"></span>
+                            {Object.keys(katakanaArray[availableKatakana[index+10]])[0]}
+                        </label>
+                    {/if}
+                {/each}
+            </div>    
+        </div>
+        
     </div>
     
-    <div class="buttons">
-        <button class="button" on:click={selectAll}>Select All</button>
-        <button class="button" on:click={clearAll}>Clear All</button>
-        <button class="button" on:click={quizMe($selectedKanaGroup)}>Quiz Me</button>    
+    <div class="btn-container">
+        <div class="buttons">
+            <button class="button" on:click={selectAll}>Select All</button>
+            <button class="button" on:click={clearAll}>Clear All</button>
+            <button class="button" on:click={quizMe($selectedKanaGroup)}>Quiz Me</button>    
+        </div>
+
+        <h1 id="no_groups" class="notVisible">
+            Please select a group of kana
+        </h1>
     </div>
-    <div class="switch-container">
-        <label class="switch">
-            <input type="checkbox">
-            <span class="slider"></span>
-        </label>
-        Special Kana
-    </div>
-    <h1 id="no_groups" class="notVisible">
-        Please select a group of kana
-    </h1>
+
 </section>
 
 <style>
     .switch-container{
         display: flex;
         gap: 0.5rem;
+
+        -webkit-user-select: none; /* Safari */        
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+/Edge */
+        user-select: none; /* Standard */
     }
     .switch input{
         opacity: 0;
@@ -107,7 +132,6 @@
     }
     .slider:before {
         content: "";
-        
         position: absolute;
         top: -3px;
         left: -2px;
@@ -139,22 +163,35 @@
         transition: transform 0.2s ease;
     }
 
-    
     .notVisible{
         visibility: hidden;
         color: #ff6f6f;
-        
     }
+    #specialGroup, .visible{
+        animation: fadeIn 2s ease-in-out;
+    }
+    .visible{
+        display: none;
+    }
+
     .kanaGroup{
         display: flex;
+        flex-wrap: wrap;
+        padding: 10px;
+        width: 600px;
         flex-direction: column;
         gap: 0.5rem;
+        -webkit-user-select: none; /* Safari */        
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+/Edge */
+        user-select: none; /* Standard */
     }
-    .kana{
+    .kana, .s-kana{
         display: flex;
+        flex-wrap: wrap;
         gap: 1rem;
     }
-    .kana input{
+    .kana input, .s-kana input{
         display: none;
     }
     .checkmark{
@@ -165,7 +202,7 @@
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.363);
         border-radius: 2px;
     }
-    .kana input:checked + .checkmark{
+    .kana input:checked + .checkmark, .s-kana input:checked + .checkmark{
         background-color: #21f364;
         box-shadow: none;
     }
@@ -178,18 +215,25 @@
         user-select: none; /* Standard */
         
     }
-    .kana input:checked + .checkmark + span{
-        color: #21f364;
-        font-weight: bold;
+    .s-kana label{
+        display: inline-block;
+        -webkit-user-select: none; /* Safari */        
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+/Edge */
+        user-select: none; /* Standard */
     }
 
+    .btn-container{
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
     
     section{
         display: flex;
         flex-direction: column;
         gap: 2rem;
     }
-
     .buttons{
         padding-top: 15px;
         display: flex;   
@@ -215,17 +259,30 @@
     }
 
 
-    @media only screen and (max-width: 767px){
+    @keyframes fadeIn{
+        from{opacity: 0;}
+        to{opacity: 1;}
+    }
+    @keyframes fadeOut{
+        from{opacity: 1;}
+        to{opacity: 0;}
+    }
+    @media (max-width: 768px){
         section{
-            gap: 3rem;
+            
         }
         .kanaGroup{
+            display: flex;
+            flex-wrap: wrap;
             gap: 1.3rem;
+            width: 300px;
+            height: 100%;
         }
         input[type="checkbox"]{
             transform: scale(1.5);
             margin: 10px;
         }
     }
+    
 
 </style>

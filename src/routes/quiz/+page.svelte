@@ -51,15 +51,6 @@
                     return state;
                 });
                 result = 'correct'
-                // answered.update(state => {
-                //     const spread = [...state.good, selectedValues[currentIndex]]
-                //     state = {
-                //         ...state,
-                //         good: spread,
-                //     }
-                //     return state
-                // })
-
                 currentIndex++
                 guess = ""
                 setTimeout(() => {
@@ -71,16 +62,7 @@
                     state.incorrectly++;
                     return state;
                 });
-                
                 result = 'wrong'
-                // answered.update(state => {
-                //     const spreadState = [...state.bad, selectedValues[currentIndex]]
-                //     state = {
-                //         ...state,
-                //         bad: spreadState,
-                //     }
-                //     return state
-                // })
                 currentIndex++
                 guess = ""
                 setTimeout(() => {
@@ -91,7 +73,6 @@
             const message = document.querySelector<HTMLParagraphElement>(".hide-message")!
             message.style.visibility = "visible";
         }
-        
     }
 </script>
 
@@ -169,7 +150,6 @@
         flex-direction: column;
     }
     .quiz-container{
-        position: relative;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -244,7 +224,7 @@
         color: #ead154;
     }
 
-    @media only screen and (max-width: 767px){
+    @media only screen and (max-width: 768px){
         form{
             gap: 2rem;
             padding: 10px;
