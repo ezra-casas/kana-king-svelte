@@ -42,6 +42,17 @@
 
     const questions = randomizeKana($selectedKanaGroup, selectedValues, hiraganaArray, katakanaArray)
     
+    function handleWrong(){
+        incorrectlyAnswered++
+        scores.update(state => {
+            state.incorrectly++;
+            return state;
+        });
+        result = ""
+        currentIndex++
+        guess = ""
+    }
+
     function handleClick(){
         if(guess.length > 0){
             if(selectedValues[currentIndex].includes(guess.toLowerCase())){
@@ -57,14 +68,8 @@
                     result = ""
                 }, 1400)
             }else{
-                incorrectlyAnswered++
-                scores.update(state => {
-                    state.incorrectly++;
-                    return state;
-                });
+                handleWrong()
                 result = 'wrong'
-                currentIndex++
-                guess = ""
                 setTimeout(() => {
                     result = ""
                 }, 1300)
@@ -74,6 +79,8 @@
             message.style.visibility = "visible";
         }
     }
+
+    
 </script>
 
 <div class="container">
@@ -97,7 +104,11 @@
                         Type in the romaji
                         <input autofocus autocapitalize="words" bind:value={guess} type="text" name="response" id="response" placeholder="romaji...">
                     </label>
-                    <button type="button" on:click|preventDefault={handleClick}>Next</button>    
+                    <div>
+                        <button type="button" on:click|preventDefault={handleClick}>Next</button>  
+                        <button type="button" on:click|preventDefault={handleWrong}>Skip</button>  
+                    </div>
+                    
                 </form>
                 <div style="height: 50px">
                     {#if result === "correct"}

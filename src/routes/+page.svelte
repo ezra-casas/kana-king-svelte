@@ -4,10 +4,9 @@
     import {version} from "../lib/versioning/version"
 
     function showHidden(): void{
-        
         toggleClassOnElements(".s-kana", "kana-selection", "input")
         toggleClassOnElements("#specialGroup", "visible")
-        
+
         const isMobile = window.matchMedia('(max-width: 767px)').matches;
         if(isMobile) { toggleClassOnElements('.container', 'height') }
         
@@ -53,7 +52,7 @@
     .switch-container{
         display: flex;
         gap: 0.5rem;
-
+        justify-content: center;
         -webkit-user-select: none; /* Safari */        
         -moz-user-select: none; /* Firefox */
         -ms-user-select: none; /* IE10+/Edge */

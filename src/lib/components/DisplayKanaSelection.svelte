@@ -157,13 +157,16 @@
     .btn-container{
         display: flex;
         flex-direction: column;
-        gap: 2rem;
+        /* background-color: #21f364; */
+        
     }
     
     
     section{
         display: flex;
         flex-direction: column;
+        align-items: center;
+        /* background-color: #21f364; */
         gap: 2rem;
     }
     .buttons{
