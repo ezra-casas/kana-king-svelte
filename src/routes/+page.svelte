@@ -2,6 +2,10 @@
     import DisplayKanaSelection from "../lib/components/DisplayKanaSelection.svelte"
     import {toggleClassOnElements} from "../lib/helpers/helpersFunctions";
     import {version} from "../lib/versioning/version"
+    import {dev} from "$app/environment";
+    import {inject} from "$vercel/analytics";
+
+    inject({mode: dev ? "development" : "production"})
 
     function showHidden(): void{
         toggleClassOnElements(".s-kana", "kana-selection", "input")
