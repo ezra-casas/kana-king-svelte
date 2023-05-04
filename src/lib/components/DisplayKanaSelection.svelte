@@ -1,25 +1,11 @@
 <script lang="ts">
 	import { kana } from '../../data/dictionary';
 	import { selectedKanaGroup } from '../../stores';
-	import { clearAll, quizMe, handleCheckboxChange } from '../helpers/helpersFunctions';
+	import { clearAll, selectAll, quizMe, handleCheckboxChange } from '../helpers/helpersFunctions';
 
 	const [hiraganaArray, katakanaArray] = kana;
 	const availableHiragana = Object.keys(hiraganaArray);
 	const availableKatakana = Object.keys(katakanaArray);
-
-	function selectAll(e: MouseEvent) {
-		e.preventDefault();
-		const checkboxes = document.querySelectorAll<HTMLInputElement>('.kana-selection:not(:checked)');
-
-		const selectedValues = Array.from(checkboxes)
-			.filter((checkbox) => checkbox.type === 'checkbox')
-			.map((checkbox) => {
-				checkbox.checked = true;
-				return checkbox.value;
-			});
-
-		selectedKanaGroup.update((array) => [...array, ...selectedValues]);
-	}
 </script>
 
 <section>

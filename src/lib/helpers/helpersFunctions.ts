@@ -2,10 +2,6 @@ import { goto } from "$app/navigation"
 import { selectedKanaGroup } from "../../stores"
 import type { Writable } from "svelte/store";
 
-// BUG: Upon flipping the switch and selcting all; 
-// We get blank canvas with error: 
-    //  error occurred while randomizing kana: TypeError: Cannot read properties of undefined (reading '0')
-  
 
 export function handleCheckboxChange(event: MouseEvent, selectedKanaGroup: Writable<Array<string>>): void {
     const inputElement = event.target as HTMLInputElement;
@@ -28,14 +24,18 @@ export function clearAll(e:Event){
     });
     selectedKanaGroup.set([])
 }
+
 export function selectAll(e: MouseEvent, selectedKanaGroup: Writable<Array<string>>) {
     e.preventDefault();
     const checkboxes = document.querySelectorAll<HTMLInputElement>('.kana-selection:not(:checked)');
-    // console.log("checkboxes: ", checkboxes)
-    const selectedValues = Array.from(checkboxes).map((checkbox) => {
-        checkbox.checked = true;
-        return checkbox.value;
-    });
+
+    const selectedValues = Array.from(checkboxes)
+        .filter((checkbox) => checkbox.type === 'checkbox')
+        .map((checkbox) => {
+            checkbox.checked = true;
+            return checkbox.value;
+        });
+
     selectedKanaGroup.update((array) => [...array, ...selectedValues]);
 }
 
