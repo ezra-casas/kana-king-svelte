@@ -2,6 +2,11 @@ import { goto } from "$app/navigation"
 import { selectedKanaGroup } from "../../stores"
 import type { Writable } from "svelte/store";
 
+// BUG: Upon flipping the switch and selcting all; 
+// We get blank canvas with error: 
+    //  error occurred while randomizing kana: TypeError: Cannot read properties of undefined (reading '0')
+  
+
 export function handleCheckboxChange(event: MouseEvent, selectedKanaGroup: Writable<Array<string>>): void {
     const inputElement = event.target as HTMLInputElement;
     const isChecked = inputElement.checked;
@@ -23,9 +28,10 @@ export function clearAll(e:Event){
     });
     selectedKanaGroup.set([])
 }
-export function selectAll(e: Event) {
+export function selectAll(e: MouseEvent, selectedKanaGroup: Writable<Array<string>>) {
     e.preventDefault();
     const checkboxes = document.querySelectorAll<HTMLInputElement>('.kana-selection:not(:checked)');
+    // console.log("checkboxes: ", checkboxes)
     const selectedValues = Array.from(checkboxes).map((checkbox) => {
         checkbox.checked = true;
         return checkbox.value;
@@ -55,7 +61,7 @@ function getRandomIndex(max: number): number {
 }
 
 export function print(str:Object){
-    console.group(str)
+    console.log(str)
 }
 
 export function addRandomKana(kanaKeys: string[], kanaValues: string[][], selectedKana: string[], selectedValues:string[][]): void {
@@ -63,34 +69,50 @@ export function addRandomKana(kanaKeys: string[], kanaValues: string[][], select
     const selectedKey = kanaKeys[randomIndex]
     const selectedValue = kanaValues[randomIndex]
 
+
     selectedValues.push(selectedValue)
     selectedKana.push(selectedKey)
 }
 
 
-export function randomizeKana(kanaGroupsToSelectFrom: string[], selectedValues:string[][], hiraganaArray: [key:string], katakanaArray: [key:string] ): string[] {
+export function randomizeKana(
+    kanaGroupsToSelectFrom: string[], 
+    selectedValues:string[][], 
+    hiraganaArray: [key:string], 
+    katakanaArray: [key:string] 
+    ): string[] {
     let kanaGroup: string[] = [];
+    try{
+        while (kanaGroup.length < 10) {
+            let groupFound = false;
+            for (let i = 0; i < kanaGroupsToSelectFrom.length; i++) {
+                const kanaGroupToSelectFrom = kanaGroupsToSelectFrom[i];
+                const groupFirstLetter: string = kanaGroupToSelectFrom[0];                
+                const isLessThanKanaGroup: boolean = kanaGroup.length < 10;
+                
+                if (groupFirstLetter === "h" && isLessThanKanaGroup) {
+                    const currentKanaKeys: string[] = Object.keys(hiraganaArray[kanaGroupsToSelectFrom[i]]);
+                    const currentKanaValues: string[][] = Object.values(hiraganaArray[kanaGroupsToSelectFrom[i]]);
 
-    while (kanaGroup.length < 10) {
-        for (let i = 0; i < kanaGroupsToSelectFrom.length; i++) {
-            const kanaGroupToSelectFrom = kanaGroupsToSelectFrom[i];
-            // TODO: FIX THIS BUG
-            const groupFirstLetter: string = kanaGroupToSelectFrom[0];
-            console.log(kanaGroupToSelectFrom)
-            const isLessThanKanaGroup: boolean = kanaGroup.length < 10;
+                    addRandomKana(currentKanaKeys, currentKanaValues, kanaGroup, selectedValues)
 
-            if (groupFirstLetter === "h" && isLessThanKanaGroup) {
-                const currentKanaKeys: string[] = Object.keys(hiraganaArray[kanaGroupsToSelectFrom[i]]);
-                const currentKanaValues: string[][] = Object.values(hiraganaArray[kanaGroupsToSelectFrom[i]]);
-                addRandomKana(currentKanaKeys, currentKanaValues, kanaGroup, selectedValues)
+                    groupFound = true;
+                }
+    
+                if (groupFirstLetter === "k" && isLessThanKanaGroup) {
+                    const currentKanaKeys: string[] = Object.keys(katakanaArray[kanaGroupsToSelectFrom[i]]);
+                    const currentKanaValues: string[][] = Object.values(katakanaArray[kanaGroupsToSelectFrom[i]]);
+                    addRandomKana(currentKanaKeys, currentKanaValues, kanaGroup, selectedValues)
+                    groupFound = true;
+                }
             }
-
-            if (groupFirstLetter === "k" && isLessThanKanaGroup) {
-                const currentKanaKeys: string[] = Object.keys(katakanaArray[kanaGroupsToSelectFrom[i]]);
-                const currentKanaValues: string[][] = Object.values(katakanaArray[kanaGroupsToSelectFrom[i]]);
-                addRandomKana(currentKanaKeys, currentKanaValues, kanaGroup, selectedValues)
+            if(!groupFound){
+                throw new Error('Could not find suitable kana groups to select from');
             }
         }
+    }catch(error){
+        console.error('An error occurred while randomizing kana:', error);
+        return [];
     }
     return kanaGroup;
 }
