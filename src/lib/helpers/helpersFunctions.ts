@@ -73,20 +73,22 @@ export function randomizeKana(kanaGroupsToSelectFrom: string[], selectedValues:s
 
     while (kanaGroup.length < 10) {
         for (let i = 0; i < kanaGroupsToSelectFrom.length; i++) {
-            const group: string = kanaGroupsToSelectFrom[i];
-            const groupFirstLetter: string = group[0];
+            const kanaGroupToSelectFrom = kanaGroupsToSelectFrom[i];
+            // TODO: FIX THIS BUG
+            const groupFirstLetter: string = kanaGroupToSelectFrom[0];
+            console.log(kanaGroupToSelectFrom)
             const isLessThanKanaGroup: boolean = kanaGroup.length < 10;
 
             if (groupFirstLetter === "h" && isLessThanKanaGroup) {
-                const currentKeys: string[] = Object.keys(hiraganaArray[kanaGroupsToSelectFrom[i]]);
-                const currentValues: string[][] = Object.values(hiraganaArray[kanaGroupsToSelectFrom[i]]);
-                addRandomKana(currentKeys, currentValues, kanaGroup, selectedValues)
+                const currentKanaKeys: string[] = Object.keys(hiraganaArray[kanaGroupsToSelectFrom[i]]);
+                const currentKanaValues: string[][] = Object.values(hiraganaArray[kanaGroupsToSelectFrom[i]]);
+                addRandomKana(currentKanaKeys, currentKanaValues, kanaGroup, selectedValues)
             }
 
             if (groupFirstLetter === "k" && isLessThanKanaGroup) {
-                const currentKeys: string[] = Object.keys(katakanaArray[kanaGroupsToSelectFrom[i]]);
-                const currentValues: string[][] = Object.values(katakanaArray[kanaGroupsToSelectFrom[i]]);
-                addRandomKana(currentKeys, currentValues, kanaGroup, selectedValues)
+                const currentKanaKeys: string[] = Object.keys(katakanaArray[kanaGroupsToSelectFrom[i]]);
+                const currentKanaValues: string[][] = Object.values(katakanaArray[kanaGroupsToSelectFrom[i]]);
+                addRandomKana(currentKanaKeys, currentKanaValues, kanaGroup, selectedValues)
             }
         }
     }
