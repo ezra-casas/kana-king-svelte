@@ -10,5 +10,5 @@ export const answered = writable({
     good: [],
     bad: []
 });
-export const number_of_questions = writable(0);
+export const number_of_questions = writable(10);
 //# sourceMappingURL=stores.js.map

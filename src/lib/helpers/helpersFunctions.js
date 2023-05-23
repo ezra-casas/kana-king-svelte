@@ -53,46 +53,50 @@ function getRandomIndex(max) {
 export function print(str) {
     console.log(str);
 }
-export function addRandomKana(kanaKeys, kanaValues, selectedKana, selectedValues) {
+export function addRandomKana(kanaKeys, kanaValues, selectedKana, selectedKanaValues) {
     const randomIndex = getRandomIndex(kanaKeys.length);
     const selectedKey = kanaKeys[randomIndex];
-    const selectedValue = kanaValues[randomIndex];
-    selectedValues.push(selectedValue);
+    const selectedKanaValue = kanaValues[randomIndex];
+    selectedKanaValues.push(selectedKanaValue);
     selectedKana.push(selectedKey);
 }
-export function randomizeKana(kanaGroupsToSelectFrom, selectedValues, hiraganaArray, katakanaArray) {
-    let kanaGroup = [];
-    try {
-        while (kanaGroup.length < 10) {
-            let groupFound = false;
-            for (let i = 0; i < kanaGroupsToSelectFrom.length; i++) {
-                const kanaGroupToSelectFrom = kanaGroupsToSelectFrom[i];
-                const groupFirstLetter = kanaGroupToSelectFrom[0];
-                const isLessThanKanaGroup = kanaGroup.length < 10;
-                if (groupFirstLetter === "h" && isLessThanKanaGroup) {
-                    const currentKanaKeys = Object.keys(hiraganaArray[kanaGroupsToSelectFrom[i]]);
-                    const currentKanaValues = Object.values(hiraganaArray[kanaGroupsToSelectFrom[i]]);
-                    addRandomKana(currentKanaKeys, currentKanaValues, kanaGroup, selectedValues);
-                    groupFound = true;
-                }
-                if (groupFirstLetter === "k" && isLessThanKanaGroup) {
-                    const currentKanaKeys = Object.keys(katakanaArray[kanaGroupsToSelectFrom[i]]);
-                    const currentKanaValues = Object.values(katakanaArray[kanaGroupsToSelectFrom[i]]);
-                    addRandomKana(currentKanaKeys, currentKanaValues, kanaGroup, selectedValues);
-                    groupFound = true;
-                }
-            }
-            if (!groupFound) {
-                throw new Error('Could not find suitable kana groups to select from');
-            }
-        }
-    }
-    catch (error) {
-        console.error('An error occurred while randomizing kana:', error);
-        return [];
-    }
-    return kanaGroup;
-}
+// export function randomizeKana(
+//     kanaGroupsToSelectFrom: string[], 
+//     selectedValues:string[][], 
+//     hiraganaArray: [key:string], 
+//     katakanaArray: [key:string] 
+//     ): string[] {
+//     let kanaGroup: string[] = [];
+//     try{
+//         while (kanaGroup.length < 10) {
+//             let groupFound = false;
+//             for (let i = 0; i < kanaGroupsToSelectFrom.length; i++) {
+//                 const kanaGroupToSelectFrom = kanaGroupsToSelectFrom[i];
+//                 const groupFirstLetter: string = kanaGroupToSelectFrom[0];                
+//                 const isLessThanKanaGroup: boolean = kanaGroup.length < 10;
+//                 if (groupFirstLetter === "h" && isLessThanKanaGroup) {
+//                     const currentKanaKeys: string[] = Object.keys(hiraganaArray[kanaGroupsToSelectFrom[i]]);
+//                     const currentKanaValues: string[][] = Object.values(hiraganaArray[kanaGroupsToSelectFrom[i]]);
+//                     addRandomKana(currentKanaKeys, currentKanaValues, kanaGroup, selectedValues)
+//                     groupFound = true;
+//                 }
+//                 if (groupFirstLetter === "k" && isLessThanKanaGroup) {
+//                     const currentKanaKeys: string[] = Object.keys(katakanaArray[kanaGroupsToSelectFrom[i]]);
+//                     const currentKanaValues: string[][] = Object.values(katakanaArray[kanaGroupsToSelectFrom[i]]);
+//                     addRandomKana(currentKanaKeys, currentKanaValues, kanaGroup, selectedValues)
+//                     groupFound = true;
+//                 }
+//             }
+//             if(!groupFound){
+//                 throw new Error('Could not find suitable kana groups to select from');
+//             }
+//         }
+//     }catch(error){
+//         console.error('An error occurred while randomizing kana:', error);
+//         return [];
+//     }
+//     return kanaGroup;
+// }
 export function quizMe(kanaGroup) {
     if (kanaGroup.length > 0) {
         goto('/quiz');
