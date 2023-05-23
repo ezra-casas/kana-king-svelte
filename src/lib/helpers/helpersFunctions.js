@@ -1,78 +1,65 @@
-import { goto } from "$app/navigation"
-import { selectedKanaGroup } from "../../stores"
-import type { Writable } from "svelte/store";
-
-export function handleCheckboxChange(event: MouseEvent, selectedKanaGroup: Writable<Array<string>>): void {
-    const inputElement = event.target as HTMLInputElement;
+import { goto } from "$app/navigation";
+import { selectedKanaGroup } from "../../stores";
+export function handleCheckboxChange(event, selectedKanaGroup) {
+    const inputElement = event.target;
     const isChecked = inputElement.checked;
     const group = inputElement.value;
-  
     if (isChecked) {
-      selectedKanaGroup.update((array: Array<string>) => [...array, group]);
-    } else {
-      selectedKanaGroup.update((groupArray: Array<string>) => groupArray.filter((x) => x !== group));
+        selectedKanaGroup.update((array) => [...array, group]);
     }
-  }
-  
-export function clearAll(e:Event){
-    e.preventDefault()
-    const checkboxes = document.querySelectorAll<HTMLInputElement>('.kana-selection:checked');
+    else {
+        selectedKanaGroup.update((groupArray) => groupArray.filter((x) => x !== group));
+    }
+}
+export function clearAll(e) {
+    e.preventDefault();
+    const checkboxes = document.querySelectorAll('.kana-selection:checked');
     Array.from(checkboxes).map((checkbox) => {
         checkbox.checked = false;
         return checkbox.value;
     });
-    selectedKanaGroup.set([])
+    selectedKanaGroup.set([]);
 }
-
-export function selectAll(e: MouseEvent, selectedKanaGroup: Writable<Array<string>>) {
+export function selectAll(e, selectedKanaGroup) {
     e.preventDefault();
-    const checkboxes = document.querySelectorAll<HTMLInputElement>('.kana-selection:not(:checked)');
-
+    const checkboxes = document.querySelectorAll('.kana-selection:not(:checked)');
     const selectedValues = Array.from(checkboxes)
         .filter((checkbox) => checkbox.type === 'checkbox')
         .map((checkbox) => {
-            checkbox.checked = true;
-            return checkbox.value;
-        });
-
+        checkbox.checked = true;
+        return checkbox.value;
+    });
     selectedKanaGroup.update((array) => [...array, ...selectedValues]);
 }
-
-export function toggleClassOnElements(selector: string, className: string, childSelector?: string){
-    const elements = document.querySelectorAll(selector)
+export function toggleClassOnElements(selector, className, childSelector) {
+    const elements = document.querySelectorAll(selector);
     elements.forEach(element => {
         element.classList.toggle(className);
-        if(childSelector){
-            const children = element.querySelectorAll(childSelector)
+        if (childSelector) {
+            const children = element.querySelectorAll(childSelector);
             children.forEach(child => {
-                child.classList.toggle(className)
-            })
+                child.classList.toggle(className);
+            });
         }
-    })
+    });
 }
-export function handleBack(){
-    selectedKanaGroup.set([])
-    goto("/")
+export function handleBack() {
+    selectedKanaGroup.set([]);
+    goto("/");
 }
-
-function getRandomIndex(max: number): number {
-    return Math.floor(Math.random() * max)
+function getRandomIndex(max) {
+    return Math.floor(Math.random() * max);
 }
-
-export function print(str:Object){
-    console.log(str)
+export function print(str) {
+    console.log(str);
 }
-
-export function addRandomKana(kanaKeys: string[], kanaValues: string[][], selectedKana: string[], selectedKanaValues:string[][]): void {
-    const randomIndex = getRandomIndex(kanaKeys.length)
-    const selectedKey = kanaKeys[randomIndex]
-    const selectedKanaValue = kanaValues[randomIndex]
-
-    selectedKanaValues.push(selectedKanaValue)
-    selectedKana.push(selectedKey)
+export function addRandomKana(kanaKeys, kanaValues, selectedKana, selectedKanaValues) {
+    const randomIndex = getRandomIndex(kanaKeys.length);
+    const selectedKey = kanaKeys[randomIndex];
+    const selectedKanaValue = kanaValues[randomIndex];
+    selectedKanaValues.push(selectedKanaValue);
+    selectedKana.push(selectedKey);
 }
-
-
 // export function randomizeKana(
 //     kanaGroupsToSelectFrom: string[], 
 //     selectedValues:string[][], 
@@ -87,16 +74,12 @@ export function addRandomKana(kanaKeys: string[], kanaValues: string[][], select
 //                 const kanaGroupToSelectFrom = kanaGroupsToSelectFrom[i];
 //                 const groupFirstLetter: string = kanaGroupToSelectFrom[0];                
 //                 const isLessThanKanaGroup: boolean = kanaGroup.length < 10;
-                
 //                 if (groupFirstLetter === "h" && isLessThanKanaGroup) {
 //                     const currentKanaKeys: string[] = Object.keys(hiraganaArray[kanaGroupsToSelectFrom[i]]);
 //                     const currentKanaValues: string[][] = Object.values(hiraganaArray[kanaGroupsToSelectFrom[i]]);
-
 //                     addRandomKana(currentKanaKeys, currentKanaValues, kanaGroup, selectedValues)
-
 //                     groupFound = true;
 //                 }
-    
 //                 if (groupFirstLetter === "k" && isLessThanKanaGroup) {
 //                     const currentKanaKeys: string[] = Object.keys(katakanaArray[kanaGroupsToSelectFrom[i]]);
 //                     const currentKanaValues: string[][] = Object.values(katakanaArray[kanaGroupsToSelectFrom[i]]);
@@ -114,14 +97,15 @@ export function addRandomKana(kanaKeys: string[], kanaValues: string[][], select
 //     }
 //     return kanaGroup;
 // }
-
-export function quizMe(kanaGroup: string[]): void {
+export function quizMe(kanaGroup) {
     if (kanaGroup.length > 0) {
         goto('/quiz');
-    } else {
+    }
+    else {
         const isVisible = document.getElementById('no_groups');
         if (isVisible) {
-        (isVisible as HTMLElement).style.visibility = 'visible';
+            isVisible.style.visibility = 'visible';
         }
     }
 }
+//# sourceMappingURL=helpersFunctions.js.map

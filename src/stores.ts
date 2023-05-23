@@ -14,3 +14,5 @@ export const answered = writable({
     good: [],
     bad: []
 })
+
+export const number_of_questions = writable(10);

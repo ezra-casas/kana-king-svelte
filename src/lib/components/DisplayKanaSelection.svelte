@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { kana } from '../../data/dictionary';
-	import { selectedKanaGroup } from '../../stores';
+	import { selectedKanaGroup, number_of_questions } from '../../stores';
 	import { clearAll, selectAll, quizMe, handleCheckboxChange } from '../helpers/helpersFunctions';
 
 	const [hiraganaArray, katakanaArray] = kana;
 	const availableHiragana = Object.keys(hiraganaArray);
 	const availableKatakana = Object.keys(katakanaArray);
+
+	let number_selected = 10;
+	$: number_of_questions.set(number_selected);
 </script>
 
 <section>
@@ -84,19 +87,27 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="btn-container">
-		<div class="buttons">
-			<button class="button" on:click={(event) => selectAll(event, selectedKanaGroup)}
-				>Select All</button
-			>
-			<button class="button" on:click={clearAll}>Clear All</button>
-			<button class="button" on:click={quizMe($selectedKanaGroup)}>Quiz Me</button>
-		</div>
-
-		<h1 id="no_groups" class="notVisible">Please select a group of kana</h1>
-	</div>
 </section>
+
+<div class="btn-container">
+	<div class="buttons">
+		<button class="button" on:click={(event) => selectAll(event, selectedKanaGroup)}>
+			Select All
+		</button>
+		<button class="button" on:click={clearAll}>Clear All</button>
+		<button class="button" on:click={quizMe($selectedKanaGroup)}>Quiz Me</button>
+		<input
+			bind:value={$number_of_questions}
+			type="number"
+			name="number"
+			id="number"
+			min="1"
+			max="30"
+		/>
+	</div>
+
+	<h1 id="no_groups" class="notVisible">Please select a group of kana</h1>
+</div>
 
 <style>
 	.notVisible {
@@ -162,24 +173,32 @@
 		user-select: none; /* Standard */
 	}
 
-	.btn-container {
-		display: flex;
-		flex-direction: column;
-		/* background-color: #21f364; */
-	}
-
 	section {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		/* background-color: #21f364; */
 		gap: 2rem;
 	}
+
+	.btn-container {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		align-self: center;
+	}
+
 	.buttons {
 		padding-top: 15px;
 		display: flex;
 		gap: 1.2rem;
 		justify-content: space-around;
+	}
+	.buttons input {
+		width: 50px;
+		border-radius: 10px;
+		border: none;
+		padding: 15px;
 	}
 	button {
 		background-color: #ffffff;
@@ -215,7 +234,7 @@
 		}
 	}
 	@media (max-width: 767px) {
-		.kanaGroup {
+		.k anaGroup {
 			display: flex;
 			flex-wrap: wrap;
 			gap: 1.3rem;
